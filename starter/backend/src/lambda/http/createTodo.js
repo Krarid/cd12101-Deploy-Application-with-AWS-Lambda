@@ -8,9 +8,10 @@ const todosTable = process.env.TODOS_TABLE
 export async function handler(event) {
 
   console.log('Creating TODO: ', event)
+  
   const todoId = uuidv4()
   // REFACTOR
-  const userId = uuidv4()
+  const userId = '8e262baa-a694-4579-afa0-a596572aed5f'
 
   const parsedBody = JSON.parse(event.body)
 
