@@ -4,6 +4,7 @@ import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
+import { getUserId } from '../utils.mjs'
 
 const dynamoDbClient = DynamoDBDocument.from(new DynamoDB())
 const todosTable = process.env.TODOS_TABLE
@@ -17,11 +18,17 @@ export const handler = middy()
 
     console.log("Getting ALL TODOs: ", event)
 
-    const scanCommand = {
-      TableName: todosTable
+    const userId = getUserId(event)
+
+    const queryCommand = {
+      TableName: todosTable,
+      KeyConditionExpression: 'userId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': userId
+      }
     }
 
-    const result = await dynamoDbClient.scan(scanCommand)
+    const result = await dynamoDbClient.query(queryCommand)
     const items = result.Items
 
     return {
