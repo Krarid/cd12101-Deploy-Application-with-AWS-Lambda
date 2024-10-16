@@ -4,6 +4,7 @@ import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
+import { getUserId } from '../utils.mjs'
 
 const dynamoDbClient = DynamoDBDocument.from(new DynamoDB())
 const todosTable = process.env.TODOS_TABLE
@@ -18,7 +19,7 @@ export const handler = middy()
     console.log('Deleting TODO: ', event)
 
     const todoId = event.pathParameters.todoId
-    const userId = '8e262baa-a694-4579-afa0-a596572aed5f'
+    const userId = getUserId(event)
 
     const deleteCommand = {
       TableName: todosTable,
