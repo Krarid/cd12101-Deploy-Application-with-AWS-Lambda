@@ -18,20 +18,21 @@ provider:
 
 functions:
 
-  #Auth:
-  #  handler: src/lambda/auth/auth0Authorizer.handler
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
 
   GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
       - http:
           method: get
+          authorizer: Auth
           path: todos
           cors: true
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:Scan
+          - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   CreateTodo:
@@ -39,6 +40,7 @@ functions:
     events:
       - http:
           method: post
+          authorizer: Auth
           path: todos
           cors: true
     iamRoleStatements:
@@ -52,6 +54,7 @@ functions:
     events:
       - http:
           method: patch
+          authorizer: Auth
           path: todos/{todoId}
           cors: true
     iamRoleStatements:
@@ -65,6 +68,7 @@ functions:
     events:
       - http:
           method: delete
+          authorizer: Auth
           path: todos/{todoId}
           cors: true
     iamRoleStatements:
