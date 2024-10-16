@@ -12,7 +12,7 @@ export function NewTodoInput({ onNewTodo }) {
   const onTodoCreate = async (event) => {
     try {
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://dev-eftbk57y7yyraxsa.us.auth0.com/api/v2/`,
         scope: 'write:todos'
       })
       const dueDate = calculateDueDate()
@@ -20,7 +20,8 @@ export function NewTodoInput({ onNewTodo }) {
         name: newTodoName,
         dueDate
       })
-      onNewTodo(createdTodo)
+      //onNewTodo(createdTodo)
+      window.location.reload()
     } catch (e) {
       console.log('Failed to created a new TODO', e)
       alert('Todo creation failed')
