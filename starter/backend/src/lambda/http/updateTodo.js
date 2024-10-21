@@ -3,6 +3,9 @@ import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
 import { updateTodo } from '../../businessLogic/todos.mjs'
+import { createLogger } from '../../utils/logger.mjs' 
+
+const logger = createLogger('utils')
 
 export const handler = middy()
   .use(httpErrorHandler())
@@ -11,10 +14,12 @@ export const handler = middy()
   )
   .handler(async (event) => {
 
-    console.log("Updating TODO: " + event)
+    logger.info(`Updating TODO item: ${event.pathParameters.todoId}`)
 
     try {
       const items = await updateTodo(event)
+
+      logger.info(`TODO item updated successfully`)
 
       return {
         statusCode: 204,
@@ -23,7 +28,8 @@ export const handler = middy()
         })
       }
     } catch(error) {
-      console.error(`Error: ${error}`)
+      logger.error(`TODO item failed to be updated: ${error}`)
+
       return {
         statusCode: 500,
         body: JSON.stringify({error})
