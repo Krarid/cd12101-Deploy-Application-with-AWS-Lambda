@@ -2,11 +2,13 @@ import { DynamoDB } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { v4 as uuidv4 } from 'uuid'
 import { getUploadUrl } from '../fileStorage/attachmentUtils.mjs'
+import AWSXRay from 'aws-xray-sdk-core'
 
 export class TodosAccess {
     
     constructor() {
-        this.dynamoDbClient = DynamoDBDocument.from(new DynamoDB())
+        this.dynamoDb = AWSXRay.captureAWSv3Client(new DynamoDB())
+        this.dynamoDbClient = DynamoDBDocument.from(this.dynamoDb)
         this.todosTable = process.env.TODOS_TABLE
     }
 
