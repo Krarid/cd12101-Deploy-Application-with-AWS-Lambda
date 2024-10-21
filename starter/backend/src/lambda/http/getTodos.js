@@ -13,12 +13,20 @@ export const handler = middy()
 
     console.log("Getting TODOs: " + event)
 
-    const items = await getTodos(event)
+    try {
+      const items = await getTodos(event)
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        items
-      })
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          items
+        })
+      }
+    } catch(error) {
+      console.error(`Error: ${error}`)
+      return {
+        statusCode: 500,
+        body: JSON.stringify({error})
+      }
     }
   })

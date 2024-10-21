@@ -2,7 +2,7 @@ import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
-import { createTodos } from '../../businessLogic/todos.mjs'
+import { createTodo } from '../../businessLogic/todos.mjs'
 
 export const handler = middy()
   .use(httpErrorHandler())
@@ -13,12 +13,20 @@ export const handler = middy()
 
     console.log("Creating TODO: " + event)
 
-    const newTodo = await createTodos(event)
+    try {
+      const newTodo = await createTodo(event)
 
-    return {
-      statusCode: 201,
-      body: JSON.stringify({
-        newTodo
-      })
+      return {
+        statusCode: 201,
+        body: JSON.stringify({
+          newTodo
+        })
+      }
+    } catch(error) {
+      console.error(`Error: ${error}`)
+      return {
+        statusCode: 500,
+        body: JSON.stringify({error})
+      }
     }
   })

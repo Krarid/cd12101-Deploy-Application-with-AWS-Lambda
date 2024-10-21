@@ -23,15 +23,15 @@ export class TodosAccess {
         return result.Items
     }
 
-    async createTodos(userId, body) {
-        //const createdAt = new Date().toISOString
+    async createTodo(userId, body) { 
         const parsedBody = JSON.parse(body)
         const todoId = uuidv4()
 
         const newTodo = {
             todoId: todoId,
             userId: userId,
-            //createdAt: createdAt,
+            done: false,
+            createdAt: new Date().toISOString(),
             ...parsedBody 
         }
 
@@ -45,7 +45,7 @@ export class TodosAccess {
         return newTodo
     }
 
-    async updateTodos(userId, todoId, body) {
+    async updateTodo(userId, todoId, body) {
         const updatedTodo = JSON.parse(body)
 
         const updateCommand = {
@@ -64,7 +64,7 @@ export class TodosAccess {
         return result.Items
     }
 
-    async deleteTodos(userId, todoId) {
+    async deleteTodo(userId, todoId) {
         const deleteCommand = {
             TableName: this.todosTable,
             Key: { todoId, userId }

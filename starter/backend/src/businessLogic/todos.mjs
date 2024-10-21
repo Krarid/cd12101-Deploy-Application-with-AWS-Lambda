@@ -8,21 +8,21 @@ export const getTodos = async (event) => {
     return todosAccess.getTodos(userId)
 }
 
-export const createTodos = async (event) => {
+export const createTodo = async (event) => {
     const userId = getUserId(event)
-    return todosAccess.createTodos(userId, event.body)
+    return todosAccess.createTodo(userId, event.body)
 }
 
-export const updateTodos = async (event) => {
+export const updateTodo = async (event) => {
     const userId = getUserId(event)
     const todoId = event.pathParameters.todoId
-    return todosAccess.updateTodos(userId, todoId, event.body)
+    return todosAccess.updateTodo(userId, todoId, event.body)
 }
 
-export const deleteTodos = async (event) => {
+export const deleteTodo = async (event) => {
     const userId = getUserId(event)
     const todoId = event.pathParameters.todoId
-    return todosAccess.deleteTodos(userId, todoId)
+    return todosAccess.deleteTodo(userId, todoId)
 }
 
 export const generateUrl = async (event) => {
