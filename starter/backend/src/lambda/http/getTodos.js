@@ -1,13 +1,8 @@
-import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
-import { getUserId } from '../utils.mjs'
-
-const dynamoDbClient = DynamoDBDocument.from(new DynamoDB())
-const todosTable = process.env.TODOS_TABLE
+import { getTodos } from '../../businessLogic/todos.mjs'
 
 export const handler = middy()
   .use(httpErrorHandler())
@@ -16,20 +11,9 @@ export const handler = middy()
   )
   .handler(async (event) => {
 
-    console.log("Getting ALL TODOs: ", event)
+    console.log("Getting TODOs: " + event)
 
-    const userId = getUserId(event)
-
-    const queryCommand = {
-      TableName: todosTable,
-      KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: {
-        ':userId': userId
-      }
-    }
-
-    const result = await dynamoDbClient.query(queryCommand)
-    const items = result.Items
+    const items = await getTodos(event)
 
     return {
       statusCode: 200,

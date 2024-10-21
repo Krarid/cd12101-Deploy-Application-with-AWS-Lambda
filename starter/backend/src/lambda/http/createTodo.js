@@ -1,14 +1,8 @@
-import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { v4 as uuidv4 } from 'uuid'
 import middy from '@middy/core'
 import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import createError from 'http-errors'
-import { getUserId } from '../utils.mjs'
-
-const dynamoDbClient = DynamoDBDocument.from(new DynamoDB())
-const todosTable = process.env.TODOS_TABLE
+import { createTodos } from '../../businessLogic/todos.mjs'
 
 export const handler = middy()
   .use(httpErrorHandler())
@@ -17,25 +11,9 @@ export const handler = middy()
   )
   .handler(async (event) => {
 
-    console.log('Creating TODO: ', event)
+    console.log("Creating TODO: " + event)
 
-    const todoId = uuidv4()
-    const userId = getUserId(event)
-    
-    const parsedBody = JSON.parse(event.body)
-
-    const newTodo = {
-      todoId: todoId,
-      userId: userId,
-      ...parsedBody 
-    }
-
-    const createCommand = {
-      TableName: todosTable,
-      Item: newTodo
-    }
-
-    await dynamoDbClient.put(createCommand)
+    const newTodo = await createTodos(event)
 
     return {
       statusCode: 201,
